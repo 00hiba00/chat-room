@@ -1,11 +1,11 @@
 <template>
     <div>
         <h2>Mon Profil</h2>
-        <user-profile></user-profile>
-        <router-link to="/Discussion">go to discussions</router-link>
+        <profile-card></profile-card>
+        
     </div>
 </template>
 
 <script setup>
-    import UserProfile from '../components/UserProfile.vue';
+    import ProfileCard from '../components/ProfileCard.vue';
 </script>
