@@ -1,8 +1,6 @@
 <template>
     <div>
       
-      
-      <!-- UserList component showing the list of users -->
       <UserList />
     </div>
   </template>

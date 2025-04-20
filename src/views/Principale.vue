@@ -59,7 +59,6 @@
         { value: 'group', text: 'Group Chat' }
       ];
 
-      // Validation computed properties
       const participantsValid = computed(() => {
         if (participants.value.length === 0) return false;
         if (participants.value.length === 1 && participants.value[0] === currentUser.value?.email) return false;
@@ -75,7 +74,6 @@
       });
 
       const formValid = computed(() => {
-        // For group chats, name is required
         if (chatroomType.value === 'group' && !chatroomName.value.trim()) return false;
         return participantsValid.value;
       });
@@ -85,12 +83,10 @@
           return;
         }
         
-        // Filter out current user from participants (if they added themselves)
         const otherParticipants = participants.value.filter(
           email => email !== currentUser.value.email
         );
         
-        // Always include current user in participants
         const allParticipants = [
           currentUser.value.email,
           ...otherParticipants

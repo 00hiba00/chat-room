@@ -26,19 +26,15 @@
   
   const router = useRouter();
   
-  // Function to navigate to the user's profile page
   
-// Function to navigate to the user's profile page
 
   const viewProfile = () => {
     console.log('User ID:', props.user.uid); // Add this for debugging
 
-  // Navigate to ProfileCard.vue with the userId parameter
   router.push({ name: 'profile', params: { userId: props.user.uid } });
 };
 
   
-  // Function to start a conversation with the user (you can implement private messaging)
   
   </script>
   
@@ -51,12 +47,10 @@
   margin-left: 10px;
 }
 
-/* Online status */
 .status-indicator.online {
   background-color: green;
 }
 
-/* Offline status */
 .status-indicator.offline {
   background-color: red;
 }

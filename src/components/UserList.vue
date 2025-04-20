@@ -28,7 +28,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import UserItem from './UserItem.vue';
-import { db } from '../firebase/firebase'; // Make sure you import your Firebase setup
+import { db } from '../firebase/firebase'; 
 import { collection, getDocs } from 'firebase/firestore';
 
 const searchQuery = ref('');
@@ -47,7 +47,6 @@ const filteredUsers = computed(() => {
   return filtered;
 });
 
-// Fetch all users from Firestore
 const fetchUsers = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, "users"));
@@ -60,7 +59,6 @@ const fetchUsers = async () => {
   }
 };
 
-// Fetch users when the component is mounted
 onMounted(() => {
   fetchUsers();
 });

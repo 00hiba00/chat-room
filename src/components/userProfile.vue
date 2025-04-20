@@ -44,7 +44,7 @@
   
   <script setup>
   import { ref, onMounted } from 'vue';
-  import { useFirestore } from '../composables/useFirestore'; // Import the composable
+  import { useFirestore } from '../composables/useFirestore'; 
   
   const { userProfile, fetchUserProfile, updateUserProfile } = useFirestore();
   
@@ -53,12 +53,10 @@
   const email = ref('');
   
   const handleSubmit = async () => {
-    // Update user profile in Firestore
     await updateUserProfile(name.value, photoURL.value);
     alert('Profil mis à jour avec succès!');
   };
   
-  // Fetch user profile data on component mount
   onMounted(async () => {
     await fetchUserProfile();
     if (userProfile.value) {

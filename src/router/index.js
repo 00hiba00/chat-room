@@ -16,13 +16,13 @@ const routes = [
     component: UserList  },
   { path: '/Login', component: Login},
   { path: '/Profile', component: Profile, meta: { requiresAuth: true }},
-  { path: '/Register', component: Register}, // Removed requiresAuth
-  { path: '/SearchUser', component: SearchUser, meta: { requiresAuth: true } },  // Define /Principale route
+  { path: '/Register', component: Register}, 
+  { path: '/SearchUser', component: SearchUser, meta: { requiresAuth: true } },  
   {
     path: '/profile/:userId',
-    name: 'profile',  // This name must match what you use in router.push()
+    name: 'profile',  
     component: ProfileCard,
-    props: true,  // This will pass the params as props to ProfileCard
+    props: true,  
     meta: { requiresAuth: true }
   },
   { path: '/Principale', component:Principale, meta: { requiresAuth: true }},
@@ -48,7 +48,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const user = auth.currentUser;
   if (to.meta.requiresAuth && !user) {
-    next({ name: 'Login' }); // Redirect to login if not authenticated
+    next({ name: 'Login' }); 
   } else {
     next();
   }

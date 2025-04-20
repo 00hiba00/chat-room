@@ -40,10 +40,8 @@ export function useChat() {
         throw new Error('Single chat must have exactly 2 participants');
       }
 
-      // Trier les emails pour que l'ordre soit toujours cohérent
       const sortedParticipants = [...chatroomData.participants].sort();
 
-      // Rechercher toutes les salles où les deux participants sont présents
       const q = query(
         collection(db, 'chatrooms'),
         where('participants', 'array-contains', sortedParticipants[0])
@@ -67,14 +65,12 @@ export function useChat() {
         }
       }
 
-      // Si aucune salle n’existe, créer une nouvelle
       chatroomData.participants = sortedParticipants;
 
       const chatroomRef = await addDoc(collection(db, 'chatrooms'), chatroomData);
       return chatroomRef.id;
     }
 
-    // Création des groupes sans vérification
     const chatroomRef = await addDoc(collection(db, 'chatrooms'), chatroomData);
     return chatroomRef.id;
 
@@ -120,7 +116,6 @@ export function useChat() {
         chatrooms.value = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
-          // Add computed property for display name
           displayName: doc.data().name || 
             doc.data().participants.filter(p => p !== userEmail).join(', ') || 
             'Private Chat'
@@ -131,7 +126,7 @@ export function useChat() {
     } catch (e) {
       error.value = e.message;
       console.error('Error fetching chatrooms:', e);
-      return () => {}; // Return empty function if error occurs
+      return () => {}; 
     }
   };
 
@@ -146,7 +141,6 @@ export function useChat() {
         messages.value = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
-          // Convert Firestore timestamp to JS Date if needed
           timestamp: doc.data().timestamp?.toDate()
         }));
       });

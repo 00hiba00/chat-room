@@ -1,7 +1,7 @@
 // src/composables/useAuth.js
 import { ref } from 'vue'
 import { auth, db } from '../firebase/firebase.js'
-import { doc, setDoc, updateDoc } from 'firebase/firestore'  // Import Firestore methods
+import { doc, setDoc, updateDoc } from 'firebase/firestore'  
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -30,10 +30,10 @@ export function useAuth() {
         const user = userCredential.user
 
         await setDoc(doc(db, 'users', user.uid), {
-            name: name,                  // User name
-            email: email,       // User email
+            name: name,                  
+            email: email,       
             photoURL: '',
-            status:true,       // Add default photo or leave it empty
+            status:true,       
           })
           console.log('User successfully registered and added to Firestore.')
           router.push('/Profile')
@@ -64,7 +64,6 @@ export function useAuth() {
   
 
   const logout = async () => {
-    // Update status BEFORE signing out
     const user = auth.currentUser
     if (user) {
         const userRef = doc(db, 'users', user.uid)
@@ -92,6 +91,6 @@ export function useAuth() {
     logout,
     resetPassword,
     error,
-    user: currentUser  // 👈 ajoute ceci
+    user: currentUser  
   }
 }
