@@ -1,52 +1,42 @@
 <template>
-<div>
-<b-input-group class="mb-3">
-  <b-form-input 
-    v-model="searchQuery" 
-    placeholder="Rechercher un utilisateur..." 
-  />
+  <div>
+    <router-link to="/Principale">
+      <b-button>Retour</b-button>
+    </router-link>
+    <b-input-group class="mb-3">
+      <b-form-input 
+        v-model="searchQuery" 
+        placeholder="Rechercher un utilisateur..." 
+      />
+    </b-input-group>
 
-</b-input-group>
+    <div v-if="users.length === 0" class="text-center">
+      <b-alert show variant="info">Aucun utilisateur trouvé.</b-alert>
+    </div>
 
-<div v-if="users.length === 0" class="text-center">
-        <b-alert show variant="info">
-          Aucun user.
-        </b-alert>
-        
-      </div>
-
-      <div v-else>
-        <br>
-        
-        <UserItem 
-          v-for="user in filteredUsers" 
-          :key="user.id" 
-          :user="user" 
-        />
-      </div>
-
-
-</div>
+    <div v-else>
+      <br>
+      <UserItem 
+        v-for="user in filteredUsers" 
+        :key="user.id" 
+        :user="user" 
+      />
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import UserItem from './UserItem.vue';
+import { db } from '../firebase/firebase'; // Make sure you import your Firebase setup
+import { collection, getDocs } from 'firebase/firestore';
 
-import { useAuth } from '../composables/useAuth';
-import { useRouter } from 'vue-router';
-
-
-
-//ajout
 const searchQuery = ref('');
-
-
+const users = ref([]);
 
 const filteredUsers = computed(() => {
-  let filtered = user.value;
+  let filtered = users.value;
 
-  // Filtre par mots-clés
   if (searchQuery.value) {
     filtered = filtered.filter(d =>
       d.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
@@ -54,16 +44,24 @@ const filteredUsers = computed(() => {
     );
   }
 
-  
-
   return filtered;
 });
-//fin
 
+// Fetch all users from Firestore
+const fetchUsers = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    users.value = querySnapshot.docs.map(doc => 
+      ({uid: doc.id,  // This is the crucial part!
+        ...doc.data()})
+    );
+  } catch (error) {
+    console.error("Error fetching users: ", error);
+  }
+};
 
-
-
-
-
-
+// Fetch users when the component is mounted
+onMounted(() => {
+  fetchUsers();
+});
 </script>

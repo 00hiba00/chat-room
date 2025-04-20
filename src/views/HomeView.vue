@@ -8,8 +8,8 @@
       <b-button>Register</b-button>
     </router-link>
 
-    <router-link to="/Principale" v-if="isLoggedIn">
-      <b-button>Discussions</b-button>
+    <router-link to="/SearchUser" v-if="isLoggedIn">
+      <b-button>Rechercher un utilisateur</b-button>
     </router-link>
 
     <b-button v-if="isLoggedIn" variant="outline-danger" @click="handleLogout" class="mb-3 float-end">

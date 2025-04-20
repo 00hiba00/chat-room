@@ -19,6 +19,7 @@ onAuthStateChanged(auth, (u) => {
   currentUser.value = u
 })
 
+
 export function useAuth() {
     const router = useRouter();
     
@@ -32,7 +33,7 @@ export function useAuth() {
             name: name,                  // User name
             email: email,       // User email
             photoURL: '',
-            status:false,       // Add default photo or leave it empty
+            status:true,       // Add default photo or leave it empty
           })
           console.log('User successfully registered and added to Firestore.')
           router.push('/Profile')
@@ -63,16 +64,17 @@ export function useAuth() {
   
 
   const logout = async () => {
+    // Update status BEFORE signing out
+    const user = auth.currentUser
+    if (user) {
+        const userRef = doc(db, 'users', user.uid)
+        await updateDoc(userRef, { status: false })
+    }
     await signOut(auth);
     
-    const user = auth.currentUser;
-    if (user) {
-      const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, {
-        status: false
-      });
+    
     }
-  }
+  
 
   const resetPassword = async (email) => {
     try {
