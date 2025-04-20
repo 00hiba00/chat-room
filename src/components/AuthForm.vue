@@ -61,3 +61,79 @@ const reset = async () => {
 }
 </script>
   
+<style scoped>
+.auth-container {
+  max-width: 420px;
+  margin: 3rem auto;
+  padding: 2.5rem;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.b-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.b-form-input {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 0.6rem 0.8rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.b-form-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.b-button {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 1rem;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #007bff, #0056b3);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.b-button:hover {
+  background: linear-gradient(90deg, #0056b3, #004085);
+}
+
+.b-button[variant="link"] {
+  background: none;
+  color: #007bff;
+  padding: 0;
+  margin-top: 0.8rem;
+  text-align: center;
+  display: block;
+}
+
+.b-button[variant="link"]:hover {
+  text-decoration: underline;
+}
+
+.b-alert {
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  font-weight: 500;
+  text-align: center;
+}
+</style>
