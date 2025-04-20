@@ -1,9 +1,15 @@
 import { ref } from 'vue';
 import { db } from '../firebase/firebase.js';
 import { 
-  collection, addDoc, serverTimestamp, 
-  query, orderBy, onSnapshot,
-  doc, setDoc, arrayUnion
+  collection, 
+  addDoc, 
+  serverTimestamp, 
+  query, 
+  orderBy, 
+  onSnapshot,
+  doc, 
+  updateDoc,
+  where
 } from 'firebase/firestore';
 
 export function useChat() {
@@ -11,20 +17,29 @@ export function useChat() {
   const messages = ref([]);
   const error = ref(null);
 
-  // Create different types of chatrooms
   const createChatroom = async (type, participants = [], name = '') => {
     try {
+      // Ensure participants array contains valid emails/IDs
+      if (!participants || participants.length === 0) {
+        throw new Error('At least one participant is required');
+      }
+
       const chatroomData = {
         type,
+        participants: Array.isArray(participants) ? participants : [participants],
         createdAt: serverTimestamp(),
         lastActive: serverTimestamp(),
       };
 
       if (type === 'group') {
         chatroomData.name = name || 'New Group Chat';
-        chatroomData.participants = participants;
-      } else if (type === 'single') {
-        chatroomData.participants = participants.sort().join('_'); // Create unique ID for 1:1 chats
+      } else {
+        // For single chats, ensure exactly 2 participants
+        if (chatroomData.participants.length !== 2) {
+          throw new Error('Single chat must have exactly 2 participants');
+        }
+        // Sort participants to create consistent chatroom IDs for 1:1 chats
+        chatroomData.participants = chatroomData.participants.sort();
       }
 
       const chatroomRef = await addDoc(collection(db, 'chatrooms'), chatroomData);
@@ -36,8 +51,7 @@ export function useChat() {
     }
   };
 
-  // Send message to chatroom
-  const sendMessage = async (chatId, text, senderId) => {
+  const sendMessage = async (text, chatId, senderId) => {
     if (!text.trim()) return;
 
     try {
@@ -47,7 +61,6 @@ export function useChat() {
         timestamp: serverTimestamp(),
       });
       
-      // Update lastActive timestamp
       await updateDoc(doc(db, 'chatrooms', chatId), {
         lastActive: serverTimestamp()
       });
@@ -57,18 +70,21 @@ export function useChat() {
     }
   };
 
-  // Fetch chatrooms for a user
-  const fetchUserChatrooms = async (userId) => {
+  const fetchUserChatrooms = async (userEmail) => {
     try {
       const q = query(
         collection(db, 'chatrooms'),
-        orderBy('lastActive', 'desc')
+        where('participants', 'array-contains', userEmail),
       );
       
       const unsubscribe = onSnapshot(q, (snapshot) => {
         chatrooms.value = snapshot.docs.map(doc => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
+          // Add computed property for display name
+          displayName: doc.data().name || 
+            doc.data().participants.filter(p => p !== userEmail).join(', ') || 
+            'Private Chat'
         }));
       });
 
@@ -76,21 +92,23 @@ export function useChat() {
     } catch (e) {
       error.value = e.message;
       console.error('Error fetching chatrooms:', e);
+      return () => {}; // Return empty function if error occurs
     }
   };
 
-  // Fetch messages for a chatroom
   const fetchMessages = (chatId) => {
     try {
       const q = query(
         collection(db, 'chatrooms', chatId, 'messages'),
-        orderBy('timestamp')
+        orderBy('timestamp', 'asc')
       );
 
       const unsubscribe = onSnapshot(q, (snapshot) => {
         messages.value = snapshot.docs.map(doc => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
+          // Convert Firestore timestamp to JS Date if needed
+          timestamp: doc.data().timestamp?.toDate()
         }));
       });
 
@@ -98,6 +116,7 @@ export function useChat() {
     } catch (e) {
       error.value = e.message;
       console.error('Error fetching messages:', e);
+      return () => {};
     }
   };
 

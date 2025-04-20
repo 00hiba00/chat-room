@@ -8,29 +8,35 @@
           class="d-flex justify-content-between align-items-center"
         >
           <div>
-            <strong>{{ chatroom.name || 'Private Chat' }}</strong>
+            <strong>{{ chatroom.displayName }}</strong>
             <div class="text-muted small">
               {{ formatLastActive(chatroom.lastActive) }}
             </div>
           </div>
-          <b-badge variant="primary">New</b-badge>
+          <b-badge v-if="hasUnreadMessages(chatroom)" variant="primary">New</b-badge>
         </b-list-group-item>
       </b-list-group>
     </div>
   </template>
   
   <script>
+  import { onMounted } from 'vue';
   import { useRouter } from 'vue-router';
+  import { useAuth } from '@/composables/useAuth';
+  import { useChat } from '@/composables/useChat';
   
   export default {
-    props: {
-      chatrooms: {
-        type: Array,
-        required: true
-      }
-    },
     setup() {
       const router = useRouter();
+      const { user } = useAuth();
+      const { chatrooms, fetchUserChatrooms } = useChat();
+  
+      // Fetch user's chatrooms when component mounts
+      onMounted(() => {
+        if (user.value) {
+          fetchUserChatrooms(user.value.email);
+        }
+      });
   
       const enterChatroom = (chatId) => {
         router.push({ name: 'chatroom', params: { id: chatId } });
@@ -38,13 +44,19 @@
   
       const formatLastActive = (timestamp) => {
         if (!timestamp) return 'No activity';
-        const date = timestamp.toDate();
-        return date.toLocaleString();
+        return timestamp.toDate().toLocaleString();
+      };
+  
+      const hasUnreadMessages = (chatroom) => {
+        // Implement your unread messages logic here
+        return false;
       };
   
       return {
+        chatrooms,
         enterChatroom,
-        formatLastActive
+        formatLastActive,
+        hasUnreadMessages
       };
     }
   };

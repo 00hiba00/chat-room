@@ -31,6 +31,11 @@ const routes = [
     path: '/chat/:id',
     component: ChatRoom,
     meta: { requiresAuth: true }
+  },{
+    path: '/chatroom/:id',
+    name: 'chatroom',
+    component: () => import('@/views/ChatRoomView.vue'),
+    props: true
   }
   
 ]

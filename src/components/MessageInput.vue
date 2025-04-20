@@ -12,19 +12,20 @@
   <script setup>
   import { ref } from 'vue'
   import { useChat } from '@/composables/useChat'
+  import { useAuth } from '@/composables/useAuth'
   
-  // Define props to receive chatId (unique identifier for the chatroom)
   const props = defineProps({
     chatId: String
   })
   
-  const text = ref('')  // User input message
-  const { sendMessage } = useChat()  // Function to send message to Firestore
+  const { user } = useAuth()
+  const text = ref('')
+  const { sendMessage } = useChat()
   
   function handleSend() {
-    if (text.value.trim()) {
-      sendMessage(text.value, props.chatId)  // Send message to Firestore with chatId
-      text.value = ''  // Clear the input field
+    if (text.value.trim() && user.value) {
+      sendMessage(text.value, props.chatId, user.value.uid)
+      text.value = ''
     }
   }
   </script>
