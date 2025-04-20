@@ -7,7 +7,8 @@ import UserList from '@/components/UserList.vue';
 import { auth} from '@/firebase/firebase.js';
 import SearchUser from '@/views/SearchUser.vue';
 import ProfileCard from '@/components/ProfileCard.vue';
-
+import Principale from '@/views/Principale.vue';
+import ChatRoom from '@/views/Chatroom.vue';
 
 const routes = [
   { path: '/', component: Home},
@@ -24,6 +25,13 @@ const routes = [
     props: true,  // This will pass the params as props to ProfileCard
     meta: { requiresAuth: true }
   },
+  { path: '/Principale', component:Principale, meta: { requiresAuth: true }},
+  
+  {
+    path: '/chat/:id',
+    component: ChatRoom,
+    meta: { requiresAuth: true }
+  }
   
 ]
 
