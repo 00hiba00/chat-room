@@ -7,7 +7,6 @@
         <p><strong>Email:</strong> {{ user.email }}</p>
         <span class="status-indicator" :class="{ online: user.status, offline: !user.status }"></span>
 
-        <!-- Add buttons for interacting with the user, like viewing their profile or starting a conversation -->
         <b-button @click="viewProfile" variant="outline-primary">View Profile</b-button>
       </b-card-body>
     </b-card>
