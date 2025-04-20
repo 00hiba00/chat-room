@@ -1,5 +1,8 @@
 <template>
     <div class="chatroom-view">
+    <router-link to="/Principale">
+      <b-button>Retour</b-button>
+    </router-link>
       <div class="header">
         <h2>{{ chatroomName }}</h2>
         <p class="participants">{{ participantsText }}</p>
