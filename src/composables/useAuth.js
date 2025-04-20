@@ -1,4 +1,3 @@
-// src/composables/useAuth.js
 import { ref } from 'vue'
 import { auth, db } from '../firebase/firebase.js'
 import { doc, setDoc, updateDoc } from 'firebase/firestore'  

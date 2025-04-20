@@ -29,7 +29,7 @@
   
 
   const viewProfile = () => {
-    console.log('User ID:', props.user.uid); // Add this for debugging
+    console.log('User ID:', props.user.uid); 
 
   router.push({ name: 'profile', params: { userId: props.user.uid } });
 };

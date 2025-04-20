@@ -58,7 +58,6 @@ export function useChat() {
           data.participants.includes(sortedParticipants[0]) &&
           data.participants.includes(sortedParticipants[1])
         ) {
-          // Chatroom déjà existante
           alert("Chatroom already exists");
           console.log('Chatroom already exists:', docSnap.id);
           return docSnap.id;

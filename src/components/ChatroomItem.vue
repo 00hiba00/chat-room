@@ -79,37 +79,61 @@
   
   
   <style scoped>
-  .message {
-    margin: 10px;
-    padding: 10px;
-    border-radius: 8px;
-    max-width: 70%;
-  }
-  
-  .my-message {
-    margin-left: auto;
-    background-color: #dcf8c6;
-  }
-  
-  .other-message {
-    margin-right: auto;
-    background-color: #ffffff;
-  }
-  
-  .message-sender {
-    font-weight: bold;
-    font-size: 0.8rem;
-    margin-bottom: 4px;
-  }
-  
-  .message-content {
-    word-wrap: break-word;
-  }
-  
-  .message-time {
-    font-size: 0.7rem;
-    color: #666;
-    text-align: right;
-    margin-top: 4px;
-  }
+.chatroom-item {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #f9f9fb;
+  border-radius: 16px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.message {
+  margin: 0.4rem 0;
+  padding: 0.9rem 1.1rem;
+  border-radius: 18px;
+  max-width: 70%;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.3s ease;
+}
+
+.my-message {
+  margin-left: auto;
+  background: linear-gradient(135deg, #4a90e2, #3578e5);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.message-sender {
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-bottom: 0.4rem;
+  color: #444;
+}
+
+.my-message .message-sender {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.message-content {
+  word-wrap: break-word;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.message-time {
+  font-size: 0.7rem;
+  text-align: right;
+  margin-top: 0.4rem;
+  opacity: 0.75;
+}
+
+.my-message .message-time {
+  color: rgba(255, 255, 255, 0.85);
+}
   </style>
