@@ -1,5 +1,6 @@
 <template>
     <div>
+      
       <h2>{{ chatroom.name || 'Private Chat' }}</h2>
       
       <div class="message-container">

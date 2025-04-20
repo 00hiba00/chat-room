@@ -9,7 +9,6 @@
 
         <!-- Add buttons for interacting with the user, like viewing their profile or starting a conversation -->
         <b-button @click="viewProfile" variant="outline-primary">View Profile</b-button>
-        <b-button @click="sendMessage" variant="outline-success" class="ms-2">Send Message</b-button>
       </b-card-body>
     </b-card>
   </template>
@@ -40,10 +39,7 @@
 
   
   // Function to start a conversation with the user (you can implement private messaging)
-  const sendMessage = () => {
-    // Logic for starting a private conversation can go here
-    alert(`Starting conversation with ${props.user.name}`);
-  };
+  
   </script>
   
   <style scoped>

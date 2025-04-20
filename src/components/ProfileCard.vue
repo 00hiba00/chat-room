@@ -1,24 +1,34 @@
 <template>
     <div>
-        <router-link to="/SearchUser">
-      <b-button>Retour</b-button>
-    </router-link>
+      <router-link to="/SearchUser">
+        <b-button>Retour</b-button>
+      </router-link>
+  
       <b-card v-if="userData">
         <b-card-header>
           <h3>{{ userData.name }}'s Profile</h3>
         </b-card-header>
-        <b-card-body>
+  
+        <b-card-body class="text-center">
+          <b-img
+            :src="userData.photoURL || 'https://via.placeholder.com/150'"
+            fluid
+            rounded
+            alt="Profile Picture"
+            class="mb-3"
+            style="max-width: 150px;"
+          />
           <p><strong>Email:</strong> {{ userData.email }}</p>
           <p>
-            <strong>Status:</strong> 
+            <strong>Status:</strong>
             <span :class="userData.status ? 'text-success' : 'text-danger'">
               {{ userData.status ? 'Online' : 'Offline' }}
             </span>
           </p>
-          <b-button @click="sendMessage" variant="outline-success" class="ms-2">Send Message</b-button>
-
+          
         </b-card-body>
       </b-card>
+  
       <b-alert v-else show variant="info">Loading user profile...</b-alert>
     </div>
   </template>
@@ -41,7 +51,7 @@
     try {
       const userRef = doc(db, 'users', props.userId);
       const userSnap = await getDoc(userRef);
-      
+  
       if (userSnap.exists()) {
         userData.value = userSnap.data();
       } else {
@@ -51,9 +61,7 @@
       console.error("Error fetching user data:", error);
     }
   });
-
-  const sendMessage = () => {
-    // Logic for starting a private conversation can go here
-    alert(`Starting conversation with ${props.user.name}`);
-  };
+  
+  
   </script>
+  

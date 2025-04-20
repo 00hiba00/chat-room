@@ -12,6 +12,10 @@
       <b-button>Rechercher un utilisateur</b-button>
     </router-link>
 
+    <router-link to="/Profile" v-if="isLoggedIn">
+      <b-button>Mon profile</b-button>
+    </router-link>
+    
     <b-button v-if="isLoggedIn" variant="outline-danger" @click="handleLogout" class="mb-3 float-end">
       Se déconnecter
     </b-button>

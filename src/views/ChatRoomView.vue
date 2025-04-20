@@ -1,6 +1,6 @@
 <template>
     <div class="chatroom-view">
-    <router-link to="/Principale">
+        <router-link to="/Principale">
       <b-button>Retour</b-button>
     </router-link>
       <div class="header">

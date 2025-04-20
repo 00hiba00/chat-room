@@ -9,7 +9,7 @@ import {
   onSnapshot,
   doc, 
   updateDoc,
-  where
+  where, getDocs
 } from 'firebase/firestore';
 
 export function useChat() {
@@ -17,39 +17,78 @@ export function useChat() {
   const messages = ref([]);
   const error = ref(null);
 
+
+
+
   const createChatroom = async (type, participants = [], name = '') => {
-    try {
-      // Ensure participants array contains valid emails/IDs
-      if (!participants || participants.length === 0) {
-        throw new Error('At least one participant is required');
+  try {
+    if (!participants || participants.length === 0) {
+      throw new Error('At least one participant is required');
+    }
+
+    const chatroomData = {
+      type,
+      participants: Array.isArray(participants) ? participants : [participants],
+      createdAt: serverTimestamp(),
+      lastActive: serverTimestamp(),
+    };
+
+    if (type === 'group') {
+      chatroomData.name = name || 'New Group Chat';
+    } else {
+      if (chatroomData.participants.length !== 2) {
+        throw new Error('Single chat must have exactly 2 participants');
       }
 
-      const chatroomData = {
-        type,
-        participants: Array.isArray(participants) ? participants : [participants],
-        createdAt: serverTimestamp(),
-        lastActive: serverTimestamp(),
-      };
+      // Trier les emails pour que l'ordre soit toujours cohérent
+      const sortedParticipants = [...chatroomData.participants].sort();
 
-      if (type === 'group') {
-        chatroomData.name = name || 'New Group Chat';
-      } else {
-        // For single chats, ensure exactly 2 participants
-        if (chatroomData.participants.length !== 2) {
-          throw new Error('Single chat must have exactly 2 participants');
+      // Rechercher toutes les salles où les deux participants sont présents
+      const q = query(
+        collection(db, 'chatrooms'),
+        where('participants', 'array-contains', sortedParticipants[0])
+      );
+
+      const querySnapshot = await getDocs(q);
+
+      for (let docSnap of querySnapshot.docs) {
+        const data = docSnap.data();
+        if (
+          data.type === 'single' &&
+          Array.isArray(data.participants) &&
+          data.participants.length === 2 &&
+          data.participants.includes(sortedParticipants[0]) &&
+          data.participants.includes(sortedParticipants[1])
+        ) {
+          // Chatroom déjà existante
+          alert("Chatroom already exists");
+          console.log('Chatroom already exists:', docSnap.id);
+          return docSnap.id;
         }
-        // Sort participants to create consistent chatroom IDs for 1:1 chats
-        chatroomData.participants = chatroomData.participants.sort();
       }
+
+      // Si aucune salle n’existe, créer une nouvelle
+      chatroomData.participants = sortedParticipants;
 
       const chatroomRef = await addDoc(collection(db, 'chatrooms'), chatroomData);
       return chatroomRef.id;
-    } catch (e) {
-      error.value = e.message;
-      console.error('Error creating chatroom:', e);
-      return null;
     }
-  };
+
+    // Création des groupes sans vérification
+    const chatroomRef = await addDoc(collection(db, 'chatrooms'), chatroomData);
+    return chatroomRef.id;
+
+  } catch (e) {
+    error.value = e.message;
+    console.error('Error creating chatroom:', e);
+    return null;
+  }
+};
+
+
+
+
+
 
   const sendMessage = async (text, chatId, senderId) => {
     if (!text.trim()) return;
